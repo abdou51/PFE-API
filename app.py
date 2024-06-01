@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 import os
 import uuid
 from model.model_utils import predict_and_save  # Correct import
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -47,5 +48,5 @@ def upload_image():
 def processed_file(filename):
     return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)

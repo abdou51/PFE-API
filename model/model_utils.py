@@ -8,7 +8,8 @@ import os
 model = models.mobilenet_v3_large(weights=None)
 num_features = model.classifier[3].in_features
 model.classifier[3] = nn.Linear(num_features, 25)
-model.load_state_dict(torch.load('model2.pth'))
+# model.load_state_dict(torch.load('model2.pth'))
+model.load_state_dict(torch.load('model2.pth', map_location=torch.device('cpu')))  # Ensure it works on CPU
 
 # Assuming you are using a GPU if available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -24,7 +25,7 @@ data_transforms = transforms.Compose([
 ])
 
 # List of classes
-num_classes = ['Tomato Bacterial_spot', 'Tomato Early_blight', 'Tomato Late_blight', 'Tomato Leaf_Mold', 'Tomato Septoria_leaf_spot', 'Tomato Spider_mites Two-spotted_spider_mite', 'Tomato Target_Spot', 'Tomato Tomato_Yellow_Leaf_Curl_Virus', 'Tomato Tomato_mosaic_virus', 'Tomato healthy', 'apple healthy', 'apple rust', 'apple scab', 'corn Blight', 'corn Common_Rust', 'corn Gray_Leaf_Spot', 'corn Healthy', 'cucumber Anthracnose', 'cucumber Bacterial Wilt', 'cucumber Downy Mildew', 'cucumber Gummy Stem Blight', 'cucumber Healthy', 'wheat Healthy', 'wheat septoria', 'wheat stripe_rust']
+num_classes = ['Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Late Blight', 'Tomato Leaf Mold', 'Tomato Septoria Leaf Spot', 'Tomato Spider Mites Two Spotted Spider Mite', 'Tomato Target Spot', 'Tomato Tomato Yellow Leaf Curl Virus', 'Tomato Tomato Mosaic Virus', 'Tomato Healthy', 'Apple Healthy', 'Apple Rust', 'Apple Scab', 'Corn Blight', 'Corn Common Rust', 'Corn Gray Leaf Spot', 'Corn Healthy', 'Cucumber Anthracnose', 'Cucumber Bacterial Wilt', 'Cucumber Downy Mildew', 'Cucumber Gummy Stem Blight', 'Cucumber Healthy', 'Wheat Healthy', 'Wheat septoria', 'Wheat stripe rust']
 
 def predict_and_save(image_path, processed_path):
     img = Image.open(image_path)
@@ -46,6 +47,6 @@ def predict_and_save(image_path, processed_path):
     # Save the processed image
     img_draw = ImageDraw.Draw(img)
     img_draw.text((10, 10), f"Class: {num_classes[predicted_class]}", fill="red")
-    transformed_img.save(processed_path)
+    img.save(processed_path)
 
     return result
